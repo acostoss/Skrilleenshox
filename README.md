@@ -6,9 +6,9 @@
 
 #### About
 
-I grew tired of not having a decent puuush alternative in Linux, so I wrote my own in a language I have never even used. 
+I grew tired of not having a decent puuush alternative in Linux, so I wrote my own in a language I have never even used.
 
-Some code is lifted from tyru's"gyazo-linux" script, which was themain inspiration for this script. There is a link to the github ofThat script in the corresponding section.
+Some code is lifted from [tyru's"gyazo-linux"](https://github.com/tyru/gyazo-linux) script.
 
 Name was suggested to me by [@8C](http://www.twitter.com/8C) onTwitter, it seemed the funniest.
 

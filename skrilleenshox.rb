@@ -27,11 +27,7 @@
     tmpFile = tmpDir + tstamp + ".png"
     imageFile = ARGV[0]
 
-# This snippet was based upon similar code in 
-# tyru's "gyazo-linux" ruby script. All credit
-# for this snippit goes to tyru.
-#
-# https://github.com/tyru/gyazo-linux
+# If we already have an image file passed as an argument, then carry on. If not, capture one from the screen.
     if imageFile && File.exist?(imageFile) then
       system "convert '#{imageFile}' '#{tmpFile}'"
     else
@@ -41,7 +37,6 @@
     if !File.exist?(tmpFile) then
       exit
     end
-# END tyru's snippet
 
 # upload to ftp server (sftp soon)
     require 'net/ftp'
