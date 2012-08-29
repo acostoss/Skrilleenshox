@@ -1,21 +1,11 @@
 #!/usr/bin/env ruby
 
-# Settings
-#   Where to save the images to, locally
-      tmpDir = ""
-#   What FTP server to upload to
-      ftpServ = ""
-#   FTP user/pass credentials
-      ftpUser = ""
-      ftpPass = ""
-#   What directory to upload to, "./" for 
-#   the home directory.
-      ftpDir = ""
-#   Where to log all URLs
-      logFile = ""
+# Load our settings
+load File.dirname(__FILE__) + '/conf.rb'
 
 
-# Capture png image, name with timestamp. Timestamps are encoded in base32 for shorter filenames.
+
+# Capture png image, name with timestamp.
     time = Time.new
     year = time.strftime("%Y").to_i
     month = time.strftime("%m").to_i # This could probably be done so much cleaner, huh?
@@ -24,10 +14,10 @@
     minute = time.strftime("%M").to_i
     second = time.strftime("%S").to_i
     tstamp = year.to_s(36) + month.to_s(36) + day.to_s(36) + hour.to_s(36) + minute.to_s(36) + second.to_s(36)
-    tmpFile = tmpDir + tstamp + ".png"
+    tmpFile = $tmpDir + tstamp + ".png"
     imageFile = ARGV[0]
 
-# If we already have an image file passed as an argument, then carry on. If not, capture one from the screen.
+# If we already have an image file passed as an argument, then carry on. If not, capture one from the screen with ImageMagick
     if imageFile && File.exist?(imageFile) then
       system "convert '#{imageFile}' '#{tmpFile}'"
     else
@@ -36,26 +26,81 @@
     
     if !File.exist?(tmpFile) then
       exit
+    end    
+    
+    if $destination === "ftp" then
+    
+        # upload to ftp server
+        require 'net/ftp'
+        
+        ftp = Net::FTP.new(ftpServ)
+            ftp.passive = true
+            ftp.login($ftpUser, $ftpPass)
+            ftp.chdir($ftpDir)
+            ftp.putbinaryfile(tmpFile)
+        ftp.close
+        
+        url = "http://" + $ftpServ + "/" + tstamp + ".png"
+        
+    elsif $destination === "sftp" then
+    
+        # upload to sftp server
+        require 'rubygems'
+        require 'net/sftp'
+        
+        Net::SFTP.start($sftpServ, $sftpUser, :password => $sftpPass) do |sftp|
+            sftp.upload!(tmpFile, $sftpDir + tstamp + ".png")   
+        end
+        
+        url = "http://" + $sftpServ + "/" + tstamp + ".png"
+        
+    elsif $destination === "imgur" then
+        
+        #upload to imgur
+        require 'net/http'
+        require 'uri'
+        require 'base64'
+        require 'rexml/document'
+
+
+        imagedata = Base64.encode64(File.read(tmpFile))
+
+        Net::HTTP::Proxy($proxyAddress, $proxyPort).start("api.imgur.com",80) {|http|
+	        res = Net::HTTP.post_form(URI.parse('http://api.imgur.com/2/upload'),
+		        {'image' => imagedata, 'key' => $imgurAPI})
+	        xml_data = res.body
+	        doc = REXML::Document.new(xml_data)
+	        doc.elements.each('upload/links/original') do |element|
+		        url = element.text
+	        end
+
+        }
+    else
+        put "Cannot upload to the service you specified. Are you sure you didn't make a typo?"
     end
 
-# upload to ftp server (sftp soon)
-    require 'net/ftp'
-    ftp = Net::FTP.new(ftpServ)
-    ftp.passive = true
-    ftp.login(ftpUser, ftpPass)
-    ftp.chdir(ftpDir)
-    ftp.putbinaryfile(tmpFile)
-    ftp.close
 
-    url = "http://" + ftpServ + "/" + tstamp + ".png"
+# Delete local copy
+    if $deleteLocalCopy === true then
+        File.delete(tmpFile)
+    end
 
-# Comment out the following lines to disable them.
-
-# copy url to clipboard
-    system "echo '#{url}' | xclip -selection clipboard"
-
-# copy url to logfile
-    system "echo '#{url}' >> " + logFile
-
-# delete image from tmpDir (comment out if you'd liek to keep a local copy)
-    File.delete(tmpFile)
+# Copy url to clipboard
+    if $copyToClipboard === true then
+        system "echo '#{url}' | xclip -selection clipboard"
+    end
+    
+# Copy url to logfile
+    if $logURL === true then
+        system "echo '#{url}' >> " + $logFile
+    end
+    
+# Open in browser
+    if $openInBrowser === true then
+	    system "#{$browser} #{url}"
+	end
+	
+# Show notification via libnotify, see the man pages for configuration details
+    if $showNotification === true then
+        system "notify-send '#{$notificationMessage}' -t #{$notificationLength"
+    end

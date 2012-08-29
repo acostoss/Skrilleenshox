@@ -1,47 +1,62 @@
-## Skrilleenshox
+# Skrilleenshox
 
-### Screenshot and FTP upload script
+## Screenshot and upload script in Ruby
 
-----
+### About
 
-#### About
-
-I grew tired of not having a decent puuush alternative in Linux, so I wrote my own in a language I have never even used.
+I grew tired of not having a decent puuush alternative in Linux, so this came to be.
 
 Some code is lifted from [tyru's"gyazo-linux"](https://github.com/tyru/gyazo-linux) script.
 
 Name was suggested to me by [@8C](http://www.twitter.com/8C) onTwitter, it seemed the funniest.
 
-----
+### Features
 
-#### To Do
+* Upload to imgur
+* Upload to a personal server (via ftp or sftp)
+* Other optional things such as
+    * Automatic copying of the URL to the clipboard
+    * Notifications
+    * Automatic opening in the browser of your choice
+    * URL logging
 
-* SFTP support, possibly default unless switch (quite likely)
-* Learn Ruby, it seems so simple (not very likely)
-* Make cross-platform (extremely unlikely)
 
-----
+### To Do
 
-#### License
-You are free to do whatever the hell you'd like to do with this code. If you do wish to attribute it to me, a link to http://acostoss.com will be more than enough.
+Nothing entirely pressing at the moment. Suggestions welcome to be sent to [acostoss@gmail.com.](mailto:acostoss@gmail.com)
 
-To be honest, I dont see this ever happening. This thing is so simple.
 
-----
+### Usage
 
-#### Usage
+#### Prerequisites
 
-###### To get the most out of Skrilleenshox, you'll need:
+At the very least, you will need:
 
-* Ruby (recent)
-* IMagemagick (recent)
-* Write access to a FTP server
-* XClip (whichever)
+* **Ruby**
+    Tested with 1.8.7
+    * Gems needed:
+        * net-ftp
+        * net-sftp
+* **ImageMagick**
+    Tested with 6.6
+* Write access to a FTP server, SFTP server, or a [free imgur API key](https://imgur.com/register/api_anon)
 
-###### To run:
+For the optional, superfluous features, you will additionally need:
+* **XClip**
+    Tested with 0.12
+* **libnotify**
+    Tested with 0.5.0
 
-* Change all settings to match your personal setup, and comment out features you'd like to disable (copying and logging).
-* Set this script as executable with `chmod +x /path/to/script`
-* Run the script and select a rectangle onscreen that you'd like captured to an image.
-* The selected image will be saved to your tempDir and uploaded to your FTP server using the credentials you specified.
-* If you haven't commented out anything, the url will be logged and copied to your clipboard.
+
+##### Running
+
+* Copy `conf.default.rb` to `conf.rb`
+* Edit the contents of `conf.rb` to fit your needs
+* Make the main script executable with `chmod +x /path/to/skrilleenshox.rb`
+* Run from the terminal, or bind it to a key such as Print Screen.
+
+### License
+You are free to do whatever the hell you'd like to do with this code. Use it for something great or terrible, for profit or not, for ego or not. I don't really mind.
+
+If you do wish to attribute it to me, a link to [http://acostoss.com] will be more than enough.
+
