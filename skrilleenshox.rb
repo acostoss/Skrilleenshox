@@ -30,7 +30,7 @@ load File.dirname(__FILE__) + '/conf.rb'
     
     if $destination === "ftp" then
     
-        # upload to ftp server
+# Upload to ftp server
         require 'net/ftp'
         
         ftp = Net::FTP.new(ftpServ)
@@ -44,7 +44,7 @@ load File.dirname(__FILE__) + '/conf.rb'
         
     elsif $destination === "sftp" then
     
-        # upload to sftp server
+# Upload to sftp server
         require 'rubygems'
         require 'net/sftp'
         
@@ -56,7 +56,7 @@ load File.dirname(__FILE__) + '/conf.rb'
         
     elsif $destination === "imgur" then
         
-        #upload to imgur
+# Upload to imgur
         require 'net/http'
         require 'uri'
         require 'base64'
