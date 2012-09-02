@@ -102,5 +102,5 @@ load File.dirname(__FILE__) + '/conf.rb'
 	
 # Show notification via libnotify, see the man pages for configuration details
     if $showNotification === true then
-        system "notify-send '#{$notificationMessage}' -t #{$notificationLength"
+        system "notify-send '#{$notificationMessage}' -t #{$notificationLength}"
     end
