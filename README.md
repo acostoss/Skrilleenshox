@@ -4,7 +4,7 @@
 
 ### About
 
-I grew tired of not having a decent puuush alternative in Linux, so this came to be.
+I grew tired of not having a decent [puush](http://puush.me) alternative in Linux, so this came to be.
 
 Some code is lifted from [tyru's"gyazo-linux"](https://github.com/tyru/gyazo-linux) script.
 
